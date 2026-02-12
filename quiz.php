@@ -17,10 +17,10 @@
             <h1 id="quiz-question" class="mt-2 text-2xl font-semibold text-gray-800">Quelle est la capitale de la :</h1>
 
             <div class="grid grid-cols-2 gap-4 mt-6">
-                <button class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</button>
-                <button class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</button>
-                <button class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</button>
-                <button class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</button>
+                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</div>
+                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</div>
+                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</div>
+                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 text-center text-gray-800 hover:bg-gray-50 cursor-pointer">Error</div>
             </div>
 
         </div>

@@ -1,67 +1,56 @@
 import countries from "../pays-capitales.json" with {type: "json"};
 // console.log(countries);
 
-function randomElement(array, condition = () => {return true}, exclude = []){
-    let element = array[Math.floor(Math.random()*(array.length))];
-    while (!condition(element) || exclude.includes(element)) {
-        element = array[Math.floor(Math.random()*(array.length))];
-    }
-    return element
+function randomElement({array, condition = () => {return true}, exclude = []}){
+    let filtered = array.filter(elem => (condition(elem) && !exclude.includes(elem)));
+    return filtered.length != 0 ? filtered[Math.floor(Math.random()*(filtered.length))] : 0;
+    
 }
-
-function btnAnswer(answer, btn) {
-    if (answer["capitale"]==btn.textContent){
-        alert("Bonne réponse");
-        newQuestion();
-    } else{
-        alert("Réponse incorrect");
-    }
-}
-
 
 function newQuestion(){
     
-    let answer = randomElement(countries);
+    let answer = randomElement({array: countries});
+    let answers = [answer];
     
-    let errors = []
-    while (errors.length != 3){
-        errors.push(randomElement(countries, (country)=>{return country["zone"]==answer["zone"]}, errors));
+    while (answers.length != 4){
+        answers.push(randomElement({array: countries, condition: (country)=>{return country["zone"]==answer["zone"]}, exclude: answers}));
     }
     
-    let answers = errors;
-    answers.push(answer);
-    
     console.log(answer);
-    console.log(answers);
+    console.log("Errors", answers);
     
-    const quizQuestion = document.querySelector("#quiz-question");
+    let quizQuestion = document.querySelector("#quiz-question");
     quizQuestion.textContent = "Quelle est la capitale de \"" + answer["pays"] + "\"";
     
-    const btns = document.querySelectorAll(".quiz-button");
+    let btns = document.querySelectorAll(".quiz-button");
     
     let randomAnswers = [];
     
     btns.forEach(btn => {
-        let currentAnswer = randomElement(answers,()=>{return true}, randomAnswers);
-        btn.textContent = currentAnswer["capitale"];
+        let currentAnswer = randomElement({array: answers, exclude: randomAnswers});
         randomAnswers.push(currentAnswer);
+
+        btn.textContent = currentAnswer["capitale"];
         
-        btn.removeEventListener("click", btnAnswer);
-        
-        btn.addEventListener("click", ()=>{
-            if (answer["capitale"]==btn.textContent){
+        const clone = btn.cloneNode(true);
+
+        clone.addEventListener("click", ()=>{
+            
+            if (answer["capitale"]==clone.textContent){
                 alert("Bonne réponse");
                 newQuestion();
             } else{
                 alert("Réponse incorrect");
             }
         });
-    
+
+        btn.replaceWith(clone);
     });
 
 }
 
-window.addEventListener("DOMContentLoaded", () => {newQuestion()});
+// window.addEventListener("DOMContentLoaded", () => {newQuestion()});
+newQuestion();
 
 
 
