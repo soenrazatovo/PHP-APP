@@ -9,7 +9,7 @@ function randomElement({array, condition = () => {return true}, exclude = []}){
 }
 
 function randomQuestion(){
-    let correct = randomElement({array: countries})
+    let correct = randomElement({array: countries, condition: (country)=>{return country.zone=="Amérique du Nord"}})
     let options = [correct]
     
     for(let i=0; i < 3; i++){
@@ -27,20 +27,28 @@ function newQuestion(){
     
     let quizBtns = []
     question.options.forEach(option => {
-        let quizBtn = document.createElement("div");
-        quizBtns.push(quizBtn);
-        quizBtn.classList = "quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"
-        quizBtn.innerHTML = '<p class="text-center text-gray-800">'+ option.capitale +'</p>'
-        
-        quizBtn.addEventListener("click", ()=>{
+        if(option != null){
+            
+            let quizBtn = document.createElement("div");
+            quizBtns.push(quizBtn);
+            quizBtn.classList = "quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"
+            quizBtn.innerHTML = '<p class="text-center text-gray-800">'+ option.capitale +'</p>'
+            
+            quizBtn.addEventListener("click", ()=>{
+    
+                quizBtns.forEach(btn => btn.classList.remove("selected", "border-indigo-600"))
+                quizBtn.classList.add("selected", "border-indigo-600")
+    
+                newSubmitBtn.classList.remove("opacity-50", "pointer-events-none")
+                newSubmitBtn.classList.add("cursor-pointer")
+    
+            });
 
-            quizBtns.forEach(btn => btn.classList.remove("selected", "border-indigo-600"))
-            quizBtn.classList.add("selected", "border-indigo-600")
-
-            newSubmitBtn.classList.remove("opacity-50", "pointer-events-none")
-            newSubmitBtn.classList.add("cursor-pointer")
-
-        });
+        } else {
+            let quizBtn = document.createElement("div");
+            quizBtns.push(quizBtn);
+            quizBtn.classList = "quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 bg-gray-200"
+        }
     });
 
     for(let i=0; i < 4; i++){
@@ -90,8 +98,6 @@ const nextBtn = document.querySelector("#quiz-next")
 const maxQuestion = 20
 let score = 0
 let questionCount = 1
-
-console.log(nextBtn.classList)
 
 window.addEventListener("DOMContentLoaded", () => {
     quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion
