@@ -18,6 +18,7 @@
       <a href="shop.php" class="text-sm/6 font-semibold text-white">E-Shop</a>
       <a href="contact.php" class="text-sm/6 font-semibold text-white">Contact</a>
       <a href="todo.php" class="text-sm/6 font-semibold text-white">Todo</a>
+      <a href="quiz.php" class="text-sm/6 font-semibold text-white">Quiz</a>
     </el-popover-group>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end items-center">
       <!-- <div class=""> -->
@@ -54,6 +55,8 @@
                   <a href="shop.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">E-shop</a>
                   <a href="contact.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Contact</a>
                   <a href="todo.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Todo</a>
+                  <a href="quiz.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Quiz</a>
+
                   <a href="cart.php" class="flex gap-5 items-center -mx-3 rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5"><img class="max-w-10 max-h-10" src="assets/icons8-cart-100.png" alt="">Your cart</a>
               </div>
               <div class="py-6">

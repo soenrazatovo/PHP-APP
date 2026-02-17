@@ -4,85 +4,97 @@ import countries from "../pays-capitales.json" with {type: "json"};
 function randomElement({array, condition = () => {return true}, exclude = []}){
     // Fonctionne avec un NodeList
     let filtered = Array.from(array).filter(elem => (condition(elem) && !exclude.includes(elem)));
-    return filtered.length != 0 ? filtered[Math.floor(Math.random()*(filtered.length))] : 0;
+    return filtered.length != 0 ? filtered[Math.floor(Math.random()*(filtered.length))] : null;
     
+}
+
+function randomQuestion(){
+    let correct = randomElement({array: countries})
+    let options = [correct]
+    
+    for(let i=0; i < 3; i++){
+        options.push(randomElement({array: countries, condition: (country)=>{return country.zone==correct.zone}, exclude: options}))
+    }
+
+    return {correct: correct, options: options}
 }
 
 function newQuestion(){
     
-    let correct = randomElement({array: countries});
-    let answers = [correct];
-    
-    while (answers.length != 4){
-        answers.push(randomElement({array: countries, condition: (country)=>{return country["zone"]==correct["zone"]}, exclude: answers}));
-    }
-    
-    console.log(correct);
-    console.log(answers);
-    
-    let quizQuestion = document.querySelector("#quiz-question");
-    quizQuestion.textContent = "Quelle est la capitale de \"" + correct["pays"] + "\" ?";
-    
-    let btns = document.querySelectorAll(".quiz-button");
-    let oldRandomBtns = [];
-    let newRandomBtns = [];
+    let question = randomQuestion()
+    console.log(question)
 
-    answers.forEach(answer => {
-        // randomBtn to remove previous event listeners
-        let oldRandomBtn = randomElement({array: btns, exclude: oldRandomBtns});
-        oldRandomBtns.push(oldRandomBtn);
-        
-        let newRandomBtn = oldRandomBtn.cloneNode(true);
-        newRandomBtns.push(newRandomBtn);
+    quizQuestion.textContent = "Quelle est la capitale de \"" + question.correct.pays + "\" ?"
+    
+    let quizBtns = []
+    quizGrid.innerHTML=""
 
-        newRandomBtn.childNodes[0].textContent = answer["capitale"];
+    question.options.forEach(option => {
+        let quizBtn = document.createElement("div");
+        quizBtns.push(quizBtn);
 
-        newRandomBtn.addEventListener("click", ()=>{
-            if (answer != correct){
-                newRandomBtn.style.setProperty("box-shadow","0 0 20px");
-                newRandomBtn.style.setProperty("color","red");
+        quizBtn.innerHTML = '<div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"><p class="text-center text-gray-800">'+ option.capitale +'</p></div>'
+        quizBtn.addEventListener("click", ()=>{
+            if (option != question.correct){
+                quizBtn.style.setProperty("box-shadow","0 0 20px");
+                quizBtn.style.setProperty("color","red");
+            } else {
+                score+=1
+                quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion + " - Score : " + score
             }
 
             // randomBtns[0] => Correct Button
-            newRandomBtns[0].style.setProperty("box-shadow","0 0 20px");
-            newRandomBtns[0].style.setProperty("color","green");
-
+            quizBtns[0].style.setProperty("box-shadow","0 0 20px");
+            quizBtns[0].style.setProperty("color","green");
+            
             // Disable buttons
-            newRandomBtns.forEach(btn => {btn.style.pointerEvents = "none";})
-        });
+            quizBtns.forEach(btn => {btn.classList.add("opacity-95", "pointer-events-none")})
 
-        oldRandomBtn.replaceWith(newRandomBtn);
+            nextBtn.classList.remove("opacity-50", "pointer-events-none")
+            nextBtn.classList.add("cursor-pointer")
+        });
     });
 
-
-    // let randomAnswers = [];
-    
-    // btns.forEach(btn => {
-    //     let currentAnswer = randomElement({array: answers, exclude: randomAnswers});
-    //     randomAnswers.push(currentAnswer);
-
-    //     btn.textContent = currentAnswer["capitale"];
-        
-    //     const clone = btn.cloneNode(true);
-
-    //     clone.addEventListener("click", ()=>{
-            
-    //         if (answer["capitale"]==clone.textContent){
-    //             alert("Bonne réponse");
-    //             newQuestion();
-    //         } else{
-    //             alert("Réponse incorrect");
-    //         }
-    //     });
-
-    //     btn.replaceWith(clone);
-    // });
+    for(let i=0; i < 4; i++){
+        quizGrid.append(randomElement({array:quizBtns, exclude:Array.from(quizGrid.childNodes)}));
+    }
 
 }
 
-// window.addEventListener("DOMContentLoaded", () => {newQuestion()});
-newQuestion();
+const quiz = document.querySelector("#quiz")
+const quizQuestion = document.querySelector("#quiz-question")
+const quizNumber = document.querySelector("#quiz-number")
+const quizGrid = document.querySelector("#quiz-grid")
+const nextBtn = document.querySelector("#quiz-next")
 
+const maxQuestion = 10
+let score = 0
+let questionCount = 1
 
+console.log(nextBtn.classList)
 
+window.addEventListener("DOMContentLoaded", () => {
+    quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion
+    newQuestion()
+});
+
+nextBtn.addEventListener("click", () => {
+    if(questionCount == 0){
+        quiz.innerHTML = ""
+        quiz.append(quizNumber,quizQuestion,quizGrid)
+    }
+    questionCount+=1
+    
+    if(questionCount <= maxQuestion){
+        quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion + " - Score : " + score
+        newQuestion()
+        nextBtn.classList.add("opacity-50", "pointer-events-none")
+        nextBtn.classList.remove("cursor-pointer")
+    } else {
+        quiz.innerHTML = '<p class="text-5xl text-center"> Votre score est de '+score+' / '+maxQuestion +'</p>'
+        questionCount = 0
+        score = 0
+    }
+    
+})
 
