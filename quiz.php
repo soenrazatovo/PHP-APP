@@ -17,12 +17,9 @@
             <div id="quiz-number" class="text-sm text-gray-500">Question 0 / 10</div>
             <h1 id="quiz-question" class="mt-2 text-2xl font-semibold text-gray-800">Quelle est la capitale de la :</h1>
 
-            <div id="quiz-grid" class="grid grid-cols-2 gap-4 mt-6">
-                <!-- <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"><p class="text-center text-gray-800">Error</p></div>
-                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"><p class="text-center text-gray-800">Error</p></div>
-                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"><p class="text-center text-gray-800">Error</p></div>
-                <div class="quiz-button flex items-center justify-center border border-gray-200 rounded-lg p-6 hover:bg-gray-50 cursor-pointer"><p class="text-center text-gray-800">Error</p></div> -->
-            </div>
+            <div id="quiz-grid" class="grid grid-cols-2 gap-4 mt-6"></div>
+
+            <!-- <div id="quiz-submit" class="opacity-50 pointer-events-none mt-4 block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</div> -->
         </div>
 
         <button id="quiz-next" class="opacity-50 pointer-events-none"><img width="100" height="100" src="https://img.icons8.com/ios-filled/100/forward--v1.png" alt="forward--v1"/></button>
