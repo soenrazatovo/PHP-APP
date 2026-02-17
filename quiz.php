@@ -19,7 +19,7 @@
 
             <div id="quiz-grid" class="grid grid-cols-2 gap-4 mt-6"></div>
 
-            <!-- <div id="quiz-submit" class="opacity-50 pointer-events-none mt-4 block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</div> -->
+            <div id="quiz-submit" class="opacity-50 pointer-events-none mt-4 block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</div>
         </div>
 
         <button id="quiz-next" class="opacity-50 pointer-events-none"><img width="100" height="100" src="https://img.icons8.com/ios-filled/100/forward--v1.png" alt="forward--v1"/></button>
