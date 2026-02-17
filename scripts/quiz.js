@@ -1,85 +1,68 @@
 import countries from "../pays-capitales.json" with {type: "json"};
-// console.log(countries);
 
-function randomElement({array, condition = () => {return true}, exclude = []}){
-    // Fonctionne avec un NodeList
-    let filtered = Array.from(array).filter(elem => (condition(elem) && !exclude.includes(elem)));
-    return filtered.length != 0 ? filtered[Math.floor(Math.random()*(filtered.length))] : null;
+class Quiz{
     
-}
+    #questionQuantity
+    #questionCount = 1
+    #score = 0
+    #oldQuestions = []
 
-function randomQuestion(oldQuestions=[]){
-    let oldCorrects;
+    #quizContainer = document.querySelector("#quiz")
+    #quizQuestion = document.querySelector("#quiz-question")
+    #quizNumber = document.querySelector("#quiz-number")
+    #quizGrid = document.querySelector("#quiz-grid")
+    #nextBtn = document.querySelector("#quiz-next")
+    #submitBtn = document.querySelector("#quiz-submit")
 
-    if(oldQuestions!=[]){
-        oldCorrects = oldQuestions.map(oldQuestion => oldQuestion.correct);
-    } else {
-        oldCorrects = []
+    constructor(_questionQuantity=20){
+        this.#questionQuantity = _questionQuantity;
+        
+        this.#quizNumber.textContent = "Question "+ this.#questionCount +" / "+ this.#questionQuantity
+        this.#oldQuestions.push(this.#newQuestion())
+
+        this.#nextBtn.addEventListener("click", () => {
+            if(this.#questionCount == 0){
+                this.#quizContainer.innerHTML = ""
+                this.#quizContainer.append(this.#quizNumber,this.#quizQuestion,this.#quizGrid,this.#submitBtn)
+            }
+
+            this.#questionCount+=1
+            
+            if(this.#questionCount <= this.#questionQuantity){
+                this.#quizNumber.textContent = "Question "+ this.#questionCount +" / "+ this.#questionQuantity + " - Score : " + this.#score
+                this.#oldQuestions.push(this.#newQuestion())
+                this.#nextBtn.classList.add("opacity-50", "pointer-events-none")
+                this.#nextBtn.classList.remove("cursor-pointer")
+            } else {
+                this.#quizContainer.innerHTML = '<p class="text-5xl text-center"> Votre score est de '+this.#score+' / '+this.#questionQuantity +'</p>'
+                this.#questionCount = 0
+                this.#score = 0
+            }
+        })
     }
 
-    let correct = randomElement({array: countries, exclude: oldCorrects})
-    let options = [correct]
-    
-    for(let i=0; i < 3; i++){
-        options.push(randomElement({array: countries, condition: (country)=>{return country.zone==correct.zone}, exclude: options}))
+    #randomElement({array, condition = () => {return true}, exclude = []}){
+        let filtered = Array.from(array).filter(elem => (condition(elem) && !exclude.includes(elem)));
+        return filtered.length != 0 ? filtered[Math.floor(Math.random()*(filtered.length))] : null;
     }
 
-    return {correct: correct, options: options}
-}
+    #randomQuestion(){
+        let oldCorrects = this.#oldQuestions.map(oldQuestion => oldQuestion.correct);
+        let correct = this.#randomElement({array: countries, exclude: oldCorrects})
+        let options = [correct]
 
+        for(let i=0; i < 3; i++){
+            options.push(this.#randomElement({array: countries, condition: (country)=>{return country.zone==correct.zone}, exclude: options}))
+        }
 
-// const quiz = document.querySelector("#quiz")
-// const quizQuestion = document.querySelector("#quiz-question")
-// const quizNumber = document.querySelector("#quiz-number")
-// const quizGrid = document.querySelector("#quiz-grid")
-// const nextBtn = document.querySelector("#quiz-next")
+        return {correct: correct, options: options}
+    }
 
-// const maxQuestion = 20
-// let score = 0
-// let questionCount = 1
-
-// window.addEventListener("DOMContentLoaded", () => {
-//     quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion
-//     newQuestion()
-// });
-
-// nextBtn.addEventListener("click", () => {
-//     if(questionCount == 0){
-//         quiz.innerHTML = ""
-//         quiz.append(quizNumber,quizQuestion,quizGrid)
-//     }
-//     questionCount+=1
+    #newQuestion(){
     
-//     if(questionCount <= maxQuestion){
-//         quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion + " - Score : " + score
-//         newQuestion()
-//         nextBtn.classList.add("opacity-50", "pointer-events-none")
-//         nextBtn.classList.remove("cursor-pointer")
-//     } else {
-//         quiz.innerHTML = '<p class="text-5xl text-center"> Votre score est de '+score+' / '+maxQuestion +'</p>'
-//         questionCount = 0
-//         score = 0
-//     }
-    
-// })
-
-function initQuiz() {
-    const quiz = document.querySelector("#quiz")
-    const quizQuestion = document.querySelector("#quiz-question")
-    const quizNumber = document.querySelector("#quiz-number")
-    const quizGrid = document.querySelector("#quiz-grid")
-    const nextBtn = document.querySelector("#quiz-next")
-
-    const maxQuestion = 20
-    let score = 0
-    let questionCount = 1
-    let oldQuestions = []
-
-    function newQuestion(){
-    
-        let question = randomQuestion(oldQuestions)
-        quizQuestion.textContent = "Quelle est la capitale de \"" + question.correct.pays + "\" ?"
-        quizGrid.innerHTML=""
+        let question = this.#randomQuestion(this.#oldQuestions)
+        this.#quizQuestion.textContent = "Quelle est la capitale de \"" + question.correct.pays + "\" ?"
+        this.#quizGrid.innerHTML=""
         
         let quizBtns = []
         question.options.forEach(option => {
@@ -108,11 +91,11 @@ function initQuiz() {
         });
 
         for(let i=0; i < 4; i++){
-            quizGrid.append(randomElement({array:quizBtns, exclude:Array.from(quizGrid.childNodes)}));
+            this.#quizGrid.append(this.#randomElement({array:quizBtns, exclude:Array.from(this.#quizGrid.childNodes)}));
         }
 
-        let newSubmitBtn = document.querySelector("#quiz-submit").cloneNode()
-        newSubmitBtn.textContent="Submit"
+        // let newSubmitBtn = document.querySelector("#quiz-submit").cloneNode(true)
+        let newSubmitBtn = this.#submitBtn.cloneNode(true)
 
         newSubmitBtn.addEventListener("click",()=>{
             let currentQuizBtn = document.querySelector(".selected");
@@ -121,8 +104,8 @@ function initQuiz() {
                 currentQuizBtn.style.setProperty("box-shadow","0 0 20px");
                 currentQuizBtn.style.setProperty("color","red");
             } else {
-                score+=1
-                quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion + " - Score : " + score
+                this.#score+=1
+                this.#quizNumber.textContent = "Question "+ this.#questionCount +" / "+ this.#questionQuantity + " - Score : " + this.#score
             }
 
             quizBtns[0].style.setProperty("box-shadow","0 0 20px");
@@ -134,44 +117,20 @@ function initQuiz() {
                 btn.classList.remove("selected", "border-indigo-600")
             })
 
-            nextBtn.classList.remove("opacity-50", "pointer-events-none")
-            nextBtn.classList.add("cursor-pointer")
+            this.#nextBtn.classList.remove("opacity-50", "pointer-events-none")
+            this.#nextBtn.classList.add("cursor-pointer")
 
             newSubmitBtn.classList.add("opacity-50", "pointer-events-none")
             newSubmitBtn.classList.remove("cursor-pointer")
         })
 
-        document.querySelector("#quiz-submit").replaceWith(newSubmitBtn)
+        this.#submitBtn.replaceWith(newSubmitBtn)
+        this.#submitBtn = newSubmitBtn;
 
         return question
     }
-
-    quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion
-    oldQuestions.push(newQuestion(score,questionCount,maxQuestion,oldQuestions))
-
-    nextBtn.addEventListener("click", () => {
-        if(questionCount == 0){
-            quiz.innerHTML = ""
-            quiz.append(quizNumber,quizQuestion,quizGrid)
-        }
-
-        questionCount+=1
-        
-        if(questionCount <= maxQuestion){
-            quizNumber.textContent = "Question "+ questionCount +" / "+ maxQuestion + " - Score : " + score
-            oldQuestions.push(newQuestion(score,questionCount,maxQuestion,oldQuestions))
-            console.log(oldQuestions)
-            nextBtn.classList.add("opacity-50", "pointer-events-none")
-            nextBtn.classList.remove("cursor-pointer")
-        } else {
-            quiz.innerHTML = '<p class="text-5xl text-center"> Votre score est de '+score+' / '+maxQuestion +'</p>'
-            questionCount = 0
-            score = 0
-        }
-    })
-
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    initQuiz()
+    new Quiz(5)
 });
